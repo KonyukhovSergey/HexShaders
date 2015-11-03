@@ -1,0 +1,57 @@
+// vertex shader
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#define PI 3.1415926535897932384626433832795
+#define SQRT2 1.41421356237
+
+uniform mediump float u_size;
+uniform float time;
+
+attribute mediump vec2 a_pos;
+attribute lowp vec4 a_col;
+
+varying lowp vec4 v_col;
+
+highp float rand(vec2 co)
+{
+    highp float a = 12.9898;
+    highp float b = 78.233;
+    highp float c = 43758.5453;
+    highp float dt= dot(co.xy ,vec2(a,b));
+    highp float sn= mod(dt,3.14);
+    return fract(sin(sn) * c);
+}
+
+
+
+void main()
+{
+
+	vec2 pos = a_pos;
+	vec3 color = vec3(0);
+	
+	color.g += 1. - pow(abs(sin(pos.x * 100. + time * 0.5) * abs(sin(time*0.1)) + 4. - pos.y), 0.1);
+	color.b += 1. - pow(abs(cos(cos(pos.x) * 2. - time * 0.5) * cos(time*0.1) - (pos.y)), 0.1);
+	color.r += 1. - pow(abs(cos(sin(pos.x) * 2. - time * 0.5) * sin(time*0.1) - (pos.y)), 0.3);
+
+	color += color.r + color.g + color.b * 6. * (1. + mod(rand(vec2(time*0.1, time*0.1)), 0.01));
+
+	v_col = vec4(color, 1.0);
+	
+	
+	gl_PointSize = u_size;
+	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
+}
+
+====
+// fragment shader
+uniform lowp sampler2D u_texture;
+varying lowp vec4 v_col;
+
+void main()
+{
+	gl_FragColor = v_col * texture2D(u_texture, gl_PointCoord);
+}
