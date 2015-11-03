@@ -7,6 +7,7 @@ import java.util.List;
 import ru.serjik.engine.EngineView;
 import ru.serjik.engine.gles20.EngineView20;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 
 public class ActivityShaders extends Activity
 {
@@ -44,7 +46,9 @@ public class ActivityShaders extends Activity
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			viewRenderer = new EngineView20(ActivityShaders.this, new HexRenderer(getAssets(), shaders.get(position)));
+			int detail = ((SeekBar) findViewById(R.id.seek_detail)).getProgress();
+			viewRenderer = new EngineView20(ActivityShaders.this, new HexRenderer(getAssets(), shaders.get(position),
+					detail * 16 + 16));
 			layoutContainer.addView(viewRenderer);
 			viewRenderer.onResume();
 		}
@@ -97,11 +101,25 @@ public class ActivityShaders extends Activity
 	{
 		if (viewRenderer != null)
 		{
-			//viewRenderer.onPause();
+			// viewRenderer.onPause();
 			layoutContainer.removeView(viewRenderer);
 			viewRenderer = null;
 			return;
 		}
 		super.onBackPressed();
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+		((SeekBar) findViewById(R.id.seek_detail)).setProgress(savedInstanceState.getInt("detail", 7));
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		outState.putInt("detail", ((SeekBar) findViewById(R.id.seek_detail)).getProgress());
 	}
 }

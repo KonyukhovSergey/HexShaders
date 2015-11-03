@@ -5,9 +5,23 @@
     android:layout_height="match_parent"
     tools:context="ru.serjik.hexshaders.ActivityShaders" >
 
-    <ListView
-        android:id="@+id/list_shaders"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <SeekBar
+            android:id="@+id/seek_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="15"
+            android:padding="16dp"
+            android:progress="8" />
+
+        <ListView
+            android:id="@+id/list_shaders"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </RelativeLayout>

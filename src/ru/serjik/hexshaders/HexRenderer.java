@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class HexRenderer implements Renderer, FrameRateUpdater
 {
-	private static final float POINTS_IN_THE_ROW = 64.0f;
+	private float pointsInTheRow;
 	private AssetManager am;
 	private String shaderName;
 	private FrameRateCalculator frc = new FrameRateCalculator(this);
@@ -36,10 +36,11 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	private int pointsCount = 0;
 	private FloatBuffer fb;
 
-	public HexRenderer(AssetManager am, String shaderName)
+	public HexRenderer(AssetManager am, String shaderName, float pointsInTheRow)
 	{
 		this.am = am;
 		this.shaderName = shaderName;
+		this.pointsInTheRow = pointsInTheRow;
 	}
 
 	@Override
@@ -48,7 +49,6 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		texture = new Texture(AssetsUtils.loadBitmap("hex3.png", am));
 		shaderHex = new ShaderHex(am, shaderName);
 		gl.glClearColor(0, 0, 0, 0);
-		fb = BufferAllocator.createFloatBuffer(3 * 200 * 200);
 	}
 
 	@Override
@@ -56,22 +56,20 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	{
 		gl.glViewport(0, 0, width, height);
 
-		pointSize = 2.0f / POINTS_IN_THE_ROW;
+		pointSize = 2.0f / pointsInTheRow;
 
 		if (width < height)
 		{
 			scaleX = 1.0f;
 			scaleY = (float) width / (float) height;
-			pointPixelsSize = 0.5f * (float) height / POINTS_IN_THE_ROW;
+			pointPixelsSize = 0.5f * (float) height / pointsInTheRow;
 		}
 		else
 		{
 			scaleX = (float) height / (float) width;
 			scaleY = 1.0f;
-			pointPixelsSize = 0.5f * (float) width / POINTS_IN_THE_ROW;
+			pointPixelsSize = 0.5f * (float) width / pointsInTheRow;
 		}
-
-		fb.position(0);
 
 		pointsCount = 0;
 		// int limit = (int) POINTS_IN_THE_ROW;
@@ -79,6 +77,10 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		int limitWidth = (int) (0.51f * (float) width / pointPixelsSize);
 		int limitHeigth = (int) (0.57f * (float) height / pointPixelsSize);
 		Random rnd = new Random();
+
+		fb = BufferAllocator.createFloatBuffer(3 * (limitHeigth * 2 + 1) * (limitWidth * 2 + 1));
+		fb.position(0);
+
 		for (int r = -limitHeigth; r <= limitHeigth; r++)
 		{
 			for (int q = (int) (-limitWidth - (r + 0.5) / 2); q <= (int) (limitWidth - (r + 0.5) / 2); q++)
@@ -89,17 +91,19 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 				{
 					fb.put(x);
 					fb.put(y);
-//					// fb.put(ColorTools.color(rnd.nextFloat(), rnd.nextFloat(),
-//					// rnd.nextFloat(), 1.0f));
-//					if (r == -limitHeigth || r == limitHeigth || q == (int) (-limitWidth - (r + 0.5) / 2)
-//							|| q == (int) (limitWidth - (r + 0.5) / 2))
-//					{
-//						fb.put(ColorTools.RED_XF00F);
-//					}
-//					else
-//					{
-						fb.put(ColorTools.WHITE_XFFFF);
-//					}
+					// // fb.put(ColorTools.color(rnd.nextFloat(),
+					// rnd.nextFloat(),
+					// // rnd.nextFloat(), 1.0f));
+					// if (r == -limitHeigth || r == limitHeigth || q == (int)
+					// (-limitWidth - (r + 0.5) / 2)
+					// || q == (int) (limitWidth - (r + 0.5) / 2))
+					// {
+					// fb.put(ColorTools.RED_XF00F);
+					// }
+					// else
+					// {
+					fb.put(ColorTools.WHITE_XFFFF);
+					// }
 
 					pointsCount++;
 				}
@@ -126,7 +130,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		shaderHex.use();
 		time += (float) (SystemClock.elapsedRealtime() - prevClock) * 0.001f;
 		prevClock = SystemClock.elapsedRealtime();
-		shaderHex.setupUniforms(pointPixelsSize*1.1f, time, 0);
+		shaderHex.setupUniforms(pointPixelsSize * 1.1f, time, 0);
 		shaderHex.setupAttribPointers(fb);
 
 		shaderHex.draw(pointsCount);
