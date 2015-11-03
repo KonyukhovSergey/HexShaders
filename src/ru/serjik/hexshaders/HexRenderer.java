@@ -74,11 +74,14 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		fb.position(0);
 
 		pointsCount = 0;
-		int limit = (int) (POINTS_IN_THE_ROW * 1.5);
+		// int limit = (int) POINTS_IN_THE_ROW;
+
+		int limitWidth = (int) (0.51f * (float) width / pointPixelsSize);
+		int limitHeigth = (int) (0.57f * (float) height / pointPixelsSize);
 		Random rnd = new Random();
-		for (int r = -limit; r <= limit; r++)
+		for (int r = -limitHeigth; r <= limitHeigth; r++)
 		{
-			for (int q = -limit; q <= limit; q++)
+			for (int q = (int) (-limitWidth - (r + 0.5) / 2); q <= (int) (limitWidth - (r + 0.5) / 2); q++)
 			{
 				float x = scaleX * HexUtils.x(q, r) * pointSize;
 				float y = scaleY * HexUtils.y(r) * pointSize;
@@ -86,7 +89,18 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 				{
 					fb.put(x);
 					fb.put(y);
-					fb.put(ColorTools.color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat(), 1.0f));
+//					// fb.put(ColorTools.color(rnd.nextFloat(), rnd.nextFloat(),
+//					// rnd.nextFloat(), 1.0f));
+//					if (r == -limitHeigth || r == limitHeigth || q == (int) (-limitWidth - (r + 0.5) / 2)
+//							|| q == (int) (limitWidth - (r + 0.5) / 2))
+//					{
+//						fb.put(ColorTools.RED_XF00F);
+//					}
+//					else
+//					{
+						fb.put(ColorTools.WHITE_XFFFF);
+//					}
+
 					pointsCount++;
 				}
 			}
@@ -112,7 +126,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		shaderHex.use();
 		time += (float) (SystemClock.elapsedRealtime() - prevClock) * 0.001f;
 		prevClock = SystemClock.elapsedRealtime();
-		shaderHex.setupUniforms(pointPixelsSize, time, 0);
+		shaderHex.setupUniforms(pointPixelsSize*1.1f, time, 0);
 		shaderHex.setupAttribPointers(fb);
 
 		shaderHex.draw(pointsCount);
