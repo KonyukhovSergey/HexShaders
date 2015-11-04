@@ -6,7 +6,8 @@ precision mediump float;
 #endif
 
 uniform mediump float u_size;
-uniform float time;
+uniform mediump vec2 iResolution;
+uniform float iGlobalTime;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -44,10 +45,10 @@ float voronoi(vec2 p)
 void main()
 {
     vec2 uv = a_pos;
-    uv.x *= 9.0/16.0;
+    uv.x *= iResolution.x/iResolution.y;
 
-    float offset = voronoi(uv*10.0 + vec2(time));
-    float t = 1.0/abs(((uv.x + sin(uv.y + time)) + offset) * 30.0);
+    float offset = voronoi(uv*10.0 + vec2(iGlobalTime));
+    float t = 1.0/abs(((uv.x + sin(uv.y + iGlobalTime)) + offset) * 30.0);
 
     float r = voronoi( uv * 1.0 ) * 10.0;
     vec3 finalColor = vec3(10.0 * uv.y, 2.0, 1.0 * r) * t;

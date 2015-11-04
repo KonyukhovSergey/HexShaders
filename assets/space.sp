@@ -5,7 +5,8 @@ precision mediump float;
 #endif
 
 uniform mediump float u_size;
-uniform float time;
+uniform float iGlobalTime;
+uniform mediump vec2 iResolution;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -44,7 +45,7 @@ return output2;
 
 float field(in vec3 p) {
 	
-	float strength = 7. + .03 * log(1.e-6 + fract(sin(time) * 4373.11));
+	float strength = 7. + .03 * log(1.e-6 + fract(sin(iGlobalTime) * 4373.11));
 	float accum = 0.;
 	float prev = 0.;
 	float tw = 0.;
@@ -52,7 +53,7 @@ float field(in vec3 p) {
 
 	for (int i = 0; i < 6; ++i) {
 		float mag = dot(p, p);
-		p = abs(p) / mag + vec3(-.5, -.8 + 0.1*sin(time*0.2 + 2.0), -1.1+0.3*cos(time*0.15));
+		p = abs(p) / mag + vec3(-.5, -.8 + 0.1*sin(iGlobalTime*0.2 + 2.0), -1.1+0.3*cos(iGlobalTime*0.15));
 		float w = exp(-float(i) / 7.);
 		accum += w * exp(-strength * pow(abs(mag - prev), 2.3));
 		tw += w;
@@ -68,7 +69,7 @@ void main()
 	vec2 uvs = uv2;
 	
 
-	float time2 = time;
+	float time2 = iGlobalTime;
                
         float speed = speed2;
         speed = 0.005 * cos(time2*0.02 + 3.1415926/4.0);
@@ -89,7 +90,7 @@ void main()
 	//mouse rotation
 	float a_xz = 0.9;
 	float a_yz = -.6;
-	float a_xy = 0.9 + time*0.04;
+	float a_xy = 0.9 + iGlobalTime*0.04;
 	
 	
 	mat2 rot_xz = mat2(cos(a_xz),sin(a_xz),-sin(a_xz),cos(a_xz));
@@ -113,10 +114,10 @@ void main()
 	vec3 forward = vec3(0.,0.,1.);
                
 	
-	from.x += transverseSpeed*(1.0)*cos(0.01*time) + 0.001*time;
-		from.y += transverseSpeed*(1.0)*sin(0.01*time) +0.001*time;
+	from.x += transverseSpeed*(1.0)*cos(0.01*iGlobalTime) + 0.001*iGlobalTime;
+		from.y += transverseSpeed*(1.0)*sin(0.01*iGlobalTime) +0.001*iGlobalTime;
 	
-	from.z += 0.003*time;
+	from.z += 0.003*iGlobalTime;
 	
 	
 	dir.xy*=rot_xy;
@@ -231,7 +232,7 @@ void main()
 	backCol2.b = 0.5*mix(backCol2.g, backCol2.b, 0.8);
 	backCol2.g = 0.0;
 
-	backCol2.bg = mix(backCol2.gb, backCol2.bg, 0.5*(cos(time*0.01) + 1.0));
+	backCol2.bg = mix(backCol2.gb, backCol2.bg, 0.5*(cos(iGlobalTime*0.01) + 1.0));
 	
 	v_col = forCol2 + vec4(backCol2, 1.0);
 

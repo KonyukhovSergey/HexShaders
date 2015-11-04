@@ -8,7 +8,8 @@ precision mediump float;
 #define SQRT2 1.41421356237
 
 uniform mediump float u_size;
-uniform float time;
+uniform float iGlobalTime;
+uniform mediump vec2 iResolution;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -33,11 +34,11 @@ void main()
 	vec2 pos = a_pos;
 	vec3 color = vec3(0);
 	
-	color.g += 1. - pow(abs(sin(pos.x * 100. + time * 0.5) * abs(sin(time*0.1)) + 4. - pos.y), 0.1);
-	color.b += 1. - pow(abs(cos(cos(pos.x) * 2. - time * 0.5) * cos(time*0.1) - (pos.y)), 0.1);
-	color.r += 1. - pow(abs(cos(sin(pos.x) * 2. - time * 0.5) * sin(time*0.1) - (pos.y)), 0.3);
+	color.g += 1. - pow(abs(sin(pos.x * 100. + iGlobalTime * 0.5) * abs(sin(iGlobalTime*0.1)) + 4. - pos.y), 0.1);
+	color.b += 1. - pow(abs(cos(cos(pos.x) * 2. - iGlobalTime * 0.5) * cos(iGlobalTime*0.1) - (pos.y)), 0.1);
+	color.r += 1. - pow(abs(cos(sin(pos.x) * 2. - iGlobalTime * 0.5) * sin(iGlobalTime*0.1) - (pos.y)), 0.3);
 
-	color += color.r + color.g + color.b * 6. * (1. + mod(rand(vec2(time*0.1, time*0.1)), 0.01));
+	color += color.r + color.g + color.b * 6. * (1. + mod(rand(vec2(iGlobalTime*0.1, iGlobalTime*0.1)), 0.01));
 
 	v_col = vec4(color, 1.0);
 	

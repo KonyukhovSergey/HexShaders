@@ -6,7 +6,8 @@ precision mediump float;
 #endif
 
 uniform mediump float u_size;
-uniform float time;
+uniform mediump vec2 iResolution;
+uniform float iGlobalTime;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -32,7 +33,7 @@ float sphere(vec3 p, vec4 spr)
 float flame(vec3 p)
 {
 	float d = sphere(p*vec3(1.,.5,1.), vec4(.0,-1.,.0,1.));
-	return d + (noise(p+vec3(.0,time*2.,.0)) + noise(p*3.)*.5)*.25*(p.y) ;
+	return d + (noise(p+vec3(.0,iGlobalTime*2.,.0)) + noise(p*3.)*.5)*.25*(p.y) ;
 }
 
 float scene(vec3 p)
@@ -64,7 +65,7 @@ vec4 raymarch(vec3 org, vec3 dir)
 void main()
 {
 	vec2 v = a_pos;
-	v.x *= 9.0/16.0;
+	v.x *= iResolution.x/iResolution.y;
 	
 	vec3 org = vec3(0., -2., 4.);
 	vec3 dir = normalize(vec3(v.x*1.6, -v.y, -1.5));

@@ -31,6 +31,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 
 	private float scaleX;
 	private float scaleY;
+	private float width, height;
 	private float pointSize;
 	private float pointPixelsSize;
 	private int pointsCount = 0;
@@ -70,6 +71,9 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 			scaleY = 1.0f;
 			pointPixelsSize = 0.5f * (float) width / pointsInTheRow;
 		}
+
+		this.width = width;
+		this.height = height;
 
 		pointsCount = 0;
 		// int limit = (int) POINTS_IN_THE_ROW;
@@ -130,7 +134,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		shaderHex.use();
 		time += (float) (SystemClock.elapsedRealtime() - prevClock) * 0.001f;
 		prevClock = SystemClock.elapsedRealtime();
-		shaderHex.setupUniforms(pointPixelsSize * 1.1f, time, 0);
+		shaderHex.setupUniforms(pointPixelsSize, time, 0, width, height);
 		shaderHex.setupAttribPointers(fb);
 
 		shaderHex.draw(pointsCount);

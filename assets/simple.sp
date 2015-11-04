@@ -4,7 +4,8 @@ precision mediump float;
 #endif
 
 uniform mediump float u_size;
-uniform float time;
+uniform float iGlobalTime;
+uniform mediump vec2 iResolution;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
