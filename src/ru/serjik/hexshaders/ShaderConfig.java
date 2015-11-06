@@ -7,7 +7,6 @@ public class ShaderConfig
 {
 	private static final String TIME_SCALE = "time_scale";
 	private static final String DETAIL_LEVEL = "detail_level";
-	private static final String FADE_LEVEL = "fade_level";
 	private static final String SHADER_NAME = "shader_index";
 	private SharedPreferences prefs;
 
@@ -34,16 +33,6 @@ public class ShaderConfig
 	public void detailLevel(int value)
 	{
 		prefs.edit().putInt(DETAIL_LEVEL, value).commit();
-	}
-
-	public int fadeLevel()
-	{
-		return prefs.getInt(FADE_LEVEL, 4);
-	}
-
-	public void fadeLevel(int value)
-	{
-		prefs.edit().putInt(FADE_LEVEL, value).commit();
 	}
 
 	public int timeScale()

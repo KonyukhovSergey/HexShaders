@@ -13,7 +13,7 @@ public class LiveWallpaper extends GLWallpaperService
 		ShaderConfig cfg = new ShaderConfig(this);
 		view.setEGLContextClientVersion(2);
 		renderer = new HexRenderer(getAssets(), cfg.shaderName(), cfg.detailLevel() * 16 + 16,
-				cfg.timeScale() * 0.2f + 0.2f, cfg.fadeLevel() * 0.1f + 0.2f);
+				cfg.timeScale() * 0.2f + 0.2f);
 		view.setRenderer(renderer);
 	}
 

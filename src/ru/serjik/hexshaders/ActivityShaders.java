@@ -29,7 +29,6 @@ public class ActivityShaders extends Activity
 	private Spinner spinnerShader;
 	private SeekBar seekDetailLevel;
 	private SeekBar seekTimeScale;
-	private SeekBar seekFadeLevel;
 
 	private ShaderConfig cfg;
 	private List<String> shaders;
@@ -128,9 +127,6 @@ public class ActivityShaders extends Activity
 		seekTimeScale = (SeekBar) findViewById(R.id.seek_time_scale);
 		seekTimeScale.setProgress(cfg.timeScale());
 		seekTimeScale.setOnSeekBarChangeListener(onSeekBarChangeListener);
-		seekFadeLevel = (SeekBar) findViewById(R.id.seek_fade_level);
-		seekFadeLevel.setProgress(cfg.fadeLevel());
-		seekFadeLevel.setOnSeekBarChangeListener(onSeekBarChangeListener);
 
 		layoutContainer = (RelativeLayout) findViewById(R.id.layout_container);
 
@@ -141,7 +137,6 @@ public class ActivityShaders extends Activity
 	{
 		cfg.shaderName((String) spinnerShader.getSelectedItem());
 		cfg.detailLevel(seekDetailLevel.getProgress());
-		cfg.fadeLevel(seekFadeLevel.getProgress());
 		cfg.timeScale(seekTimeScale.getProgress());
 		removeView();
 		addView();
@@ -150,7 +145,7 @@ public class ActivityShaders extends Activity
 	private void addView()
 	{
 		viewRenderer = new EngineView20(this, new HexRenderer(getAssets(), cfg.shaderName(),
-				cfg.detailLevel() * 16 + 16, cfg.timeScale() * 0.2f + 0.2f, cfg.fadeLevel() * 0.1f + 0.2f));
+				cfg.detailLevel() * 16 + 16, cfg.timeScale() * 0.2f + 0.2f));
 		layoutContainer.addView(viewRenderer, 0);
 		viewRenderer.onResume();
 	}

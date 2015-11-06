@@ -7,7 +7,7 @@ precision mediump float;
 
 uniform mediump float u_size;
 uniform mediump vec2 iResolution;
-uniform float iGlobalTime;
+uniform highp float iGlobalTime;
 uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
@@ -78,7 +78,7 @@ void main()
 	
 	v_col = mix(vec4(0.), col, pow(glow*2.,4.));
 	
-	v_col *= a_col;
+	//v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

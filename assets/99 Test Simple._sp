@@ -4,7 +4,7 @@ precision mediump float;
 #endif
 
 uniform mediump float u_size;
-uniform float iGlobalTime;
+uniform highp float iGlobalTime;
 uniform mediump vec2 iResolution;
 uniform mediump float u_offset;
 

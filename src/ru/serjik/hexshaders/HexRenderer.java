@@ -39,16 +39,14 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	private static float time = 0;
 	private long prevClock = SystemClock.elapsedRealtime();
 	private float timeScale;
-	private float fadeLevel = 1.0f;
 	public float offset = 0;
 
-	public HexRenderer(AssetManager am, String shaderName, float pointsInTheRow, float timeScale, float fadeLevel)
+	public HexRenderer(AssetManager am, String shaderName, float pointsInTheRow, float timeScale)
 	{
 		this.am = am;
 		this.shaderName = shaderName;
 		this.timeScale = timeScale;
 		this.pointsInTheRow = pointsInTheRow;
-		this.fadeLevel = fadeLevel;
 	}
 
 	@Override
@@ -100,7 +98,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 				{
 					fb.put(x);
 					fb.put(y);
-					fb.put(ColorTools.color(fadeLevel, fadeLevel, fadeLevel, 1.0f));
+					fb.put(ColorTools.WHITE_XFFFF);
 					pointsCount++;
 				}
 			}

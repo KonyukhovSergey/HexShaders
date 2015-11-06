@@ -8,11 +8,11 @@ precision mediump float;
 #define SQRT2 1.41421356237
 
 uniform mediump float u_size;
-uniform float iGlobalTime;
+uniform highp float iGlobalTime;
 uniform mediump vec2 iResolution;
 uniform mediump float u_offset;
 
-attribute mediump vec2 a_pos;
+attribute highp vec2 a_pos;
 attribute lowp vec4 a_col;
 
 varying lowp vec4 v_col;
@@ -27,8 +27,6 @@ highp float rand(vec2 co)
     return fract(sin(sn) * c);
 }
 
-
-
 void main()
 {
 
@@ -41,10 +39,10 @@ void main()
 
 	color += color.r + color.g + color.b * 6. * (1. + mod(rand(vec2(iGlobalTime*0.1, iGlobalTime*0.1)), 0.01));
 
-	v_col = vec4(color, 1.0);
+	v_col = vec4(color*0.7, 1.0);
 	
 	
-	v_col *= a_col;
+	//v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }
