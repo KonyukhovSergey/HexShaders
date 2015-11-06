@@ -10,6 +10,7 @@ precision mediump float;
 uniform mediump float u_size;
 uniform float iGlobalTime;
 uniform mediump vec2 iResolution;
+uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -115,7 +116,7 @@ void main()
 {
 				float speed=2.0;
 				
-				vec2 uv = a_pos*0.5+0.5;
+				vec2 uv = (a_pos+vec2(u_offset,0.0))*0.5+0.5;
 				
 				uv.x*=(iResolution.x/iResolution.y);
 				
@@ -173,6 +174,7 @@ void main()
 				
 				v_col = vec4(Snowout*0.9, Snowout, Snowout*1.1, 1.0);
 					
+	v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

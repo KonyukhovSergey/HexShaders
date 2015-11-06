@@ -7,6 +7,7 @@ precision mediump float;
 uniform mediump float u_size;
 uniform float iGlobalTime;
 uniform mediump vec2 iResolution;
+uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -19,7 +20,7 @@ varying lowp vec4 v_col;
 
 void main()
 {
-	vec2 sp = a_pos;
+	vec2 sp = a_pos + vec2(u_offset, 0.0);
 	vec2 p = sp*8.0- vec2(20.0);
 	vec2 i = p;
 	float c = 1.0;
@@ -34,8 +35,8 @@ void main()
 	c /= float(MAX_ITER);
 	c = 1.5-sqrt(c);
 	v_col = vec4(vec3(c*c*c*c*c), 19.0) + vec4(0.0, 0.3, 0.5, 1.0);
-
-	//v_col = vec4(color, 1.0);
+	
+	v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

@@ -8,6 +8,7 @@ precision mediump float;
 uniform mediump float u_size;
 uniform mediump vec2 iResolution;
 uniform float iGlobalTime;
+uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -64,7 +65,7 @@ vec4 raymarch(vec3 org, vec3 dir)
 
 void main()
 {
-	vec2 v = a_pos;
+	vec2 v = a_pos+vec2(u_offset,0.0);
 	v.x *= iResolution.x/iResolution.y;
 	
 	vec3 org = vec3(0., -2., 4.);
@@ -77,7 +78,7 @@ void main()
 	
 	v_col = mix(vec4(0.), col, pow(glow*2.,4.));
 	
-	//v_col = vec4(color, 1.0);
+	v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

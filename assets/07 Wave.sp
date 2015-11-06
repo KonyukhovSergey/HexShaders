@@ -10,6 +10,7 @@ precision mediump float;
 uniform mediump float u_size;
 uniform float iGlobalTime;
 uniform mediump vec2 iResolution;
+uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -31,7 +32,7 @@ highp float rand(vec2 co)
 void main()
 {
 
-	vec2 pos = a_pos;
+	vec2 pos = a_pos+vec2(u_offset,0.0);
 	vec3 color = vec3(0);
 	
 	color.g += 1. - pow(abs(sin(pos.x * 100. + iGlobalTime * 0.5) * abs(sin(iGlobalTime*0.1)) + 4. - pos.y), 0.1);
@@ -43,6 +44,7 @@ void main()
 	v_col = vec4(color, 1.0);
 	
 	
+	v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

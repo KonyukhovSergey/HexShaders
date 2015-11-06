@@ -2,5 +2,10 @@
 <resources>
 
     <string name="app_name">Hex Shaders</string>
+    <string name="detail_level">Detail level</string>
+    <string name="time_scale">Time scale</string>
+    <string name="shader_programm">Shader programm</string>
+    <string name="set_wallpaper">Click to set this wallpaper</string>
+    <string name="fade_level">Fade level</string>
 
 </resources>

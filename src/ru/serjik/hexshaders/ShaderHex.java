@@ -11,6 +11,7 @@ public class ShaderHex extends ShaderProgram
 {
 	public int u_size;
 	public int u_time;
+	public int u_offset;
 	public int u_res;
 	public int u_texture;
 	public int a_pos;
@@ -21,6 +22,7 @@ public class ShaderHex extends ShaderProgram
 		super(AssetsUtils.readText(shaderName, am));
 		u_size = getUniformLocation("u_size");
 		u_time = getUniformLocation("iGlobalTime");
+		u_offset = getUniformLocation("u_offset");
 		u_res = getUniformLocation("iResolution");
 		u_texture = getUniformLocation("u_texture");
 		a_pos = getAttribLocation("a_pos");
@@ -34,10 +36,11 @@ public class ShaderHex extends ShaderProgram
 		// GLES20.glUniform2f(u_ScreenSize, width, height);
 	}
 
-	public void setupUniforms(float pointSizeInPixels, float time, int texture, float width, float height)
+	public void setupUniforms(float pointSizeInPixels, float time, int texture, float width, float height, float offset)
 	{
 		GLES20.glUniform1f(u_size, pointSizeInPixels);
 		GLES20.glUniform1f(u_time, time);
+		GLES20.glUniform1f(u_offset, offset);
 		GLES20.glUniform1i(u_texture, texture);
 		GLES20.glUniform2f(u_res, width, height);
 	}

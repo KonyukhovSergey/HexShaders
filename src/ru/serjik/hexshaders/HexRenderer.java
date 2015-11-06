@@ -1,7 +1,6 @@
 package ru.serjik.hexshaders;
 
 import java.nio.FloatBuffer;
-import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -11,8 +10,8 @@ import ru.serjik.engine.utils.BufferAllocator;
 import ru.serjik.engine.utils.ColorTools;
 import ru.serjik.utils.AssetsUtils;
 import ru.serjik.utils.FrameRateCalculator;
-import ru.serjik.utils.HexUtils;
 import ru.serjik.utils.FrameRateCalculator.FrameRateUpdater;
+import ru.serjik.utils.HexUtils;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
@@ -37,17 +36,25 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	private int pointsCount = 0;
 	private FloatBuffer fb;
 
-	public HexRenderer(AssetManager am, String shaderName, float pointsInTheRow)
+	private static float time = 0;
+	private long prevClock = SystemClock.elapsedRealtime();
+	private float timeScale;
+	private float fadeLevel = 1.0f;
+	public float offset = 0;
+
+	public HexRenderer(AssetManager am, String shaderName, float pointsInTheRow, float timeScale, float fadeLevel)
 	{
 		this.am = am;
 		this.shaderName = shaderName;
+		this.timeScale = timeScale;
 		this.pointsInTheRow = pointsInTheRow;
+		this.fadeLevel = fadeLevel;
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
-		texture = new Texture(AssetsUtils.loadBitmap("hex3.png", am));
+		texture = new Texture(AssetsUtils.loadBitmap("hex.png", am));
 		shaderHex = new ShaderHex(am, shaderName);
 		gl.glClearColor(0, 0, 0, 0);
 	}
@@ -76,18 +83,16 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		this.height = height;
 
 		pointsCount = 0;
-		// int limit = (int) POINTS_IN_THE_ROW;
 
-		int limitWidth = (int) (0.51f * (float) width / pointPixelsSize);
-		int limitHeigth = (int) (0.57f * (float) height / pointPixelsSize);
-		Random rnd = new Random();
+		int limitWidth = (int) (0.6f * (float) width / pointPixelsSize);
+		int limitHeigth = (int) (0.6f * (float) height / pointPixelsSize);
 
 		fb = BufferAllocator.createFloatBuffer(3 * (limitHeigth * 2 + 1) * (limitWidth * 2 + 1));
 		fb.position(0);
 
 		for (int r = -limitHeigth; r <= limitHeigth; r++)
 		{
-			for (int q = (int) (-limitWidth - (r + 0.5) / 2); q <= (int) (limitWidth - (r + 0.5) / 2); q++)
+			for (int q = -limitWidth - r / 2; q <= limitWidth - r / 2; q++)
 			{
 				float x = scaleX * HexUtils.x(q, r) * pointSize;
 				float y = scaleY * HexUtils.y(r) * pointSize;
@@ -95,20 +100,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 				{
 					fb.put(x);
 					fb.put(y);
-					// // fb.put(ColorTools.color(rnd.nextFloat(),
-					// rnd.nextFloat(),
-					// // rnd.nextFloat(), 1.0f));
-					// if (r == -limitHeigth || r == limitHeigth || q == (int)
-					// (-limitWidth - (r + 0.5) / 2)
-					// || q == (int) (limitWidth - (r + 0.5) / 2))
-					// {
-					// fb.put(ColorTools.RED_XF00F);
-					// }
-					// else
-					// {
-					fb.put(ColorTools.WHITE_XFFFF);
-					// }
-
+					fb.put(ColorTools.color(fadeLevel, fadeLevel, fadeLevel, 1.0f));
 					pointsCount++;
 				}
 			}
@@ -122,9 +114,6 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		Texture.wrap(GLES20.GL_CLAMP_TO_EDGE, GLES20.GL_CLAMP_TO_EDGE);
 	}
 
-	float time = 0;
-	long prevClock = SystemClock.elapsedRealtime();
-
 	@Override
 	public void onDrawFrame(GL10 gl)
 	{
@@ -132,9 +121,13 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		shaderHex.use();
-		time += (float) (SystemClock.elapsedRealtime() - prevClock) * 0.001f;
+		time += (float) (SystemClock.elapsedRealtime() - prevClock) * 0.001f * timeScale;
+		if (time > 600)
+		{
+			time = 0;
+		}
 		prevClock = SystemClock.elapsedRealtime();
-		shaderHex.setupUniforms(pointPixelsSize, time, 0, width, height);
+		shaderHex.setupUniforms(pointPixelsSize, time, 0, width, height, offset * scaleX);
 		shaderHex.setupAttribPointers(fb);
 
 		shaderHex.draw(pointsCount);

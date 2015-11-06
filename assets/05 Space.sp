@@ -7,6 +7,7 @@ precision mediump float;
 uniform mediump float u_size;
 uniform float iGlobalTime;
 uniform mediump vec2 iResolution;
+uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -65,7 +66,7 @@ float field(in vec3 p) {
 
 void main()
 {
-     	vec2 uv2 = a_pos;
+     	vec2 uv2 = a_pos+vec2(u_offset,0.0);
 	vec2 uvs = uv2;
 	
 
@@ -207,9 +208,6 @@ void main()
 		
 		s+=stepsize;
 		s3 += stepsize;
-		
-		
-		
 		}
 		       
 	v=mix(vec3(length(v)),v,saturation); //color adjust
@@ -236,7 +234,7 @@ void main()
 	
 	v_col = forCol2 + vec4(backCol2, 1.0);
 
-	//v_col = vec4(color, 1.0);
+	v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

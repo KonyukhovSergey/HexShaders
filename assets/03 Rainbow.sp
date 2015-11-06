@@ -8,6 +8,7 @@ precision mediump float;
 uniform mediump float u_size;
 uniform mediump vec2 iResolution;
 uniform float iGlobalTime;
+uniform mediump float u_offset;
 
 attribute mediump vec2 a_pos;
 attribute lowp vec4 a_col;
@@ -44,7 +45,7 @@ float voronoi(vec2 p)
 
 void main()
 {
-    vec2 uv = a_pos;
+    vec2 uv = a_pos+vec2(u_offset,0.0);
     uv.x *= iResolution.x/iResolution.y;
 
     float offset = voronoi(uv*10.0 + vec2(iGlobalTime));
@@ -55,7 +56,7 @@ void main()
     
     v_col = vec4(finalColor, 1.0 );
 	
-	//v_col = vec4(color, 1.0);
+	v_col *= a_col;
 	gl_PointSize = u_size;
 	gl_Position =  vec4(a_pos.x, a_pos.y, 1.0, 1.0);
 }

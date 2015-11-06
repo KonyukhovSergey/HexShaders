@@ -7,21 +7,73 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:background="#8000"
+        android:orientation="vertical"
+        android:padding="8dp" >
 
-        <SeekBar
-            android:id="@+id/seek_detail"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shader_programm"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <Spinner
+            android:id="@+id/spinner_shader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="15"
-            android:padding="16dp"
-            android:progress="8" />
+            android:spinnerMode="dropdown" />
 
-        <ListView
-            android:id="@+id/list_shaders"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/detail_level"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <SeekBar
+            android:id="@+id/seek_detail_level"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:max="8"
+            android:progress="4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/time_scale"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <SeekBar
+            android:id="@+id/seek_time_scale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="8"
+            android:progress="4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/fade_level"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <SeekBar
+            android:id="@+id/seek_fade_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="8"
+            android:progress="4" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_set_wallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/set_wallpaper" />
 
 </RelativeLayout>
