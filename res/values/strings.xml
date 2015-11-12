@@ -6,6 +6,5 @@
     <string name="time_scale">Time scale</string>
     <string name="shader_programm">Shader programm</string>
     <string name="set_wallpaper">Click to set this wallpaper</string>
-    <string name="fade_level">Fade level</string>
 
 </resources>

@@ -30,7 +30,7 @@ void main()
  	vec2 uv = a_pos*0.5 + 0.5;
 	uv.y = 1.0 - uv.y;
 	vec2 coord = vec2(uv.x*iResolution.x + u_offset*iResolution.x, (uv.y-0.25)*iResolution.y);
-	
+	coord += vec2(iResolution.x*sin(iGlobalTime*0.2), iResolution.x*cos(iGlobalTime*0.01))*0.3;
 	
 	// Set the parameters of the sun rays
 	vec2 rayPos1 = vec2(iResolution.x * 0.7, iResolution.y * -0.4);

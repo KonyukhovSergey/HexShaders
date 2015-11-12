@@ -131,15 +131,14 @@ void main()
 	suns = clamp(0.2+suns,0.0,1.0);
 	float sunsh = smoothstep(0.85,0.95,suns);
 
-	float slope;
-	slope=0.8+uv.x-(uv.y*2.3);
+	float slope=0.8+uv.x-(uv.y*2.3);
 	slope=1.0-smoothstep(0.55,0.0,slope);								
 				
 	float noise=abs(fbm(uv*1.5));
 	slope=(noise*0.2)+(slope-((1.0-noise)*slope*0.1))*0.6;
 	slope=clamp(slope,0.0,1.0);
 										
-	vec2 GA;
+	vec2 GA=vec2(0.0);
 	GA.x-=iGlobalTime*1.8;
 	GA.y+=iGlobalTime*0.9;
 	GA*=speed;

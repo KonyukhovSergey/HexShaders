@@ -42,7 +42,7 @@ vec3 firePalette(float i){
 vec3 hash33(vec3 p){ 
     
     float n = sin(dot(p, vec3(7, 157, 113)));    
-    return fract(vec3(2097152, 262144, 32768)*n); 
+    return fract(vec3(2097152., 262144., 32768.)*n); 
 }
 
 // 3D Voronoi: Obviously, this is just a rehash of IQ's original.

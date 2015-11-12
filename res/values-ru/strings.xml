@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Hex Shaders</string>
+    <string name="detail_level">Уровень детализации</string>
+    <string name="time_scale">Ускорение времени</string>
+    <string name="shader_programm">Шейдерная программа</string>
+    <string name="set_wallpaper">Установить эти живые обои</string>
+
+</resources>

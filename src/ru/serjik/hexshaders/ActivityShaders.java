@@ -92,7 +92,7 @@ public class ActivityShaders extends Activity
 			String className = LiveWallpaper.class.getCanonicalName();
 			intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(packageName, className));
 
-			startActivity(intent);
+			startActivityForResult(intent, 0);
 			finish();
 		}
 	};
