@@ -30,12 +30,6 @@ public class ShaderHex extends ShaderProgram
 		releaseCompiler();
 	}
 
-	@Override
-	public void setupUniformValues()
-	{
-		// GLES20.glUniform2f(u_ScreenSize, width, height);
-	}
-
 	public void setupUniforms(float pointSizeInPixels, float time, int texture, float width, float height, float offset)
 	{
 		GLES20.glUniform1f(u_size, pointSizeInPixels);

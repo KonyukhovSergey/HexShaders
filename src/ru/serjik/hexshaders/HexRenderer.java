@@ -136,7 +136,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	@Override
 	public void onFrameRateUpdate(FrameRateCalculator frameRateCalculator)
 	{
-		Log.i("fps", frameRateCalculator.frameString());
+//		Log.i("fps", frameRateCalculator.frameString());
 	}
 
 }
