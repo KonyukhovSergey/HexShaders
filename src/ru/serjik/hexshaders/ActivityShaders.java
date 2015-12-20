@@ -6,11 +6,15 @@ import java.util.List;
 
 import ru.serjik.engine.EngineView;
 import ru.serjik.engine.gles20.EngineView20;
+import ru.serjik.wallpaper.WallpaperOffsetsListener;
 import android.app.Activity;
 import android.app.WallpaperManager;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -20,9 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class ActivityShaders extends Activity
 {
+	protected static final int REQUEST_SET_LIVE_WALLPAPER = 20000;
 	private RelativeLayout layoutContainer;
 	private EngineView viewRenderer;
 
@@ -32,6 +38,9 @@ public class ActivityShaders extends Activity
 
 	private ShaderConfig cfg;
 	private List<String> shaders;
+
+	private float startX;
+	private float offset = 0;
 
 	private OnItemSelectedListener onItemSelectedListener = new OnItemSelectedListener()
 	{
@@ -45,7 +54,17 @@ public class ActivityShaders extends Activity
 		public void onNothingSelected(AdapterView<?> parent)
 		{
 			// TODO Auto-generated method stub
+		}
+	};
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode != 0)
+		{
+			finish();
 		}
 	};
 
@@ -73,27 +92,49 @@ public class ActivityShaders extends Activity
 		@Override
 		public void onClick(View v)
 		{
-			WallpaperManager wm = WallpaperManager.getInstance(getApplicationContext());
+			WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 
 			try
 			{
-				wm.clear();
+				wallpaperManager.clear();
 			}
 			catch (IOException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			Intent intent = new Intent();
-			intent.setAction(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
-
-			String packageName = LiveWallpaper.class.getPackage().getName();
-			String className = LiveWallpaper.class.getCanonicalName();
-			intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(packageName, className));
-
-			startActivityForResult(intent, 0);
-			finish();
+			try
+			{
+				String packageName = LiveWallpaper.class.getPackage().getName();
+				String className = LiveWallpaper.class.getCanonicalName();
+				ComponentName component = new ComponentName(packageName, className);
+				Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
+				intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, component);
+				startActivityForResult(intent, REQUEST_SET_LIVE_WALLPAPER);
+			}
+			catch (ActivityNotFoundException e3)
+			{
+				try
+				{
+					Intent intent = new Intent(WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER);
+					finish();
+					startActivity(intent);
+				}
+				catch (ActivityNotFoundException e2)
+				{
+					try
+					{
+						Intent intent = new Intent();
+						intent.setAction("com.bn.nook.CHANGE_WALLPAPER");
+						finish();
+						startActivity(intent);
+					}
+					catch (ActivityNotFoundException e)
+					{
+						Toast.makeText(getBaseContext(), R.string.app_name, Toast.LENGTH_LONG).show();
+					}
+				}
+			}
 		}
 	};
 
@@ -144,8 +185,8 @@ public class ActivityShaders extends Activity
 
 	private void addView()
 	{
-		viewRenderer = new EngineView20(this, new HexRenderer(getAssets(), cfg.shaderName(),
-				cfg.detailLevel() * 16 + 16, cfg.timeScale() * 0.2f + 0.2f));
+		viewRenderer = new EngineView20(this, (Renderer) (wallpaperOffsetsListener = new HexRenderer(getAssets(), cfg.shaderName(),
+				cfg.detailLevel() * 16 + 16, cfg.timeScale() * 0.2f + 0.2f)));
 		layoutContainer.addView(viewRenderer, 0);
 		viewRenderer.onResume();
 	}
@@ -190,6 +231,36 @@ public class ActivityShaders extends Activity
 	{
 		super.onPause();
 		removeView();
+	}
+
+	private WallpaperOffsetsListener wallpaperOffsetsListener;
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		if (event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			startX = event.getX();
+		}
+		if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP)
+		{
+			float dx = (event.getX() - startX);
+			startX = event.getX();
+
+			offset -= dx / (float) findViewById(R.id.layout_container).getWidth();
+
+			if (offset < -0.5f)
+			{
+				offset = -0.5f;
+			}
+			if (offset > 0.5f)
+			{
+				offset = 0.5f;
+			}
+			wallpaperOffsetsListener.onOffsetChanged(offset, 0);
+		}
+
+		return super.onTouchEvent(event);
 	}
 
 }

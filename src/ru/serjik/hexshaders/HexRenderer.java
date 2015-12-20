@@ -11,6 +11,7 @@ import ru.serjik.engine.utils.ColorTools;
 import ru.serjik.utils.AssetsUtils;
 import ru.serjik.utils.FrameRateCalculator;
 import ru.serjik.utils.FrameRateCalculator.FrameRateUpdater;
+import ru.serjik.wallpaper.WallpaperOffsetsListener;
 import ru.serjik.utils.HexUtils;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
@@ -18,7 +19,7 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.util.Log;
 
-public class HexRenderer implements Renderer, FrameRateUpdater
+public class HexRenderer implements Renderer, FrameRateUpdater, WallpaperOffsetsListener
 {
 	private float pointsInTheRow;
 	private AssetManager am;
@@ -39,7 +40,7 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	private static float time = 0;
 	private long prevClock = SystemClock.elapsedRealtime();
 	private float timeScale;
-	public float offset = 0;
+	private float offset = 0;
 
 	public HexRenderer(AssetManager am, String shaderName, float pointsInTheRow, float timeScale)
 	{
@@ -136,7 +137,13 @@ public class HexRenderer implements Renderer, FrameRateUpdater
 	@Override
 	public void onFrameRateUpdate(FrameRateCalculator frameRateCalculator)
 	{
-//		Log.i("fps", frameRateCalculator.frameString());
+		// Log.i("fps", frameRateCalculator.frameString());
+	}
+
+	@Override
+	public void onOffsetChanged(float xOffset, float yOffset)
+	{
+		offset = xOffset;
 	}
 
 }
